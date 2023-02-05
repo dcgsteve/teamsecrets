@@ -5,11 +5,10 @@ import (
 )
 
 type Context struct {
-	Debug bool
+	CurrentProject string
 }
 
-// menu items
-
+// ProjectCmd menu items
 type ProjectCmd struct {
 	New struct {
 		ProjectName string `arg:"" help:"project name"`
@@ -29,7 +28,7 @@ type GetCmd struct {
 	SecretName string `arg:"" help:"secret name"`
 }
 
-// menu structure
+// main menu structure
 var cli struct {
 	Get     GetCmd     `cmd:"" help:"Get a secret"`
 	Set     SetCmd     `cmd:"" help:"Set a secret"`
@@ -37,10 +36,7 @@ var cli struct {
 }
 
 func main() {
-	ctx := kong.Parse(&cli,
-		kong.Description("Team Secrets"),
-		kong.ConfigureHelp(kong.HelpOptions{Compact: true}),
-		kong.Name("ts"))
-	err := ctx.Run(&Context{})
+	ctx := kong.Parse(&cli)
+	err := ctx.Run(&Context{CurrentProject: "test"})
 	ctx.FatalIfErrorf(err)
 }
